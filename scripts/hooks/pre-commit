@@ -1,0 +1,6 @@
+#!/bin/sh
+# Run the sync script
+powershell.exe -ExecutionPolicy Bypass -File scripts/sync_content.ps1
+
+# Stage any changes made to the skills and rules directories
+git add .claude/skills/ .cursor/rules/ .gemini/skills/
