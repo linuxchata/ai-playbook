@@ -1,0 +1,30 @@
+name: Verify Sync
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  verify:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Sync Script
+        shell: pwsh
+        run: ./scripts/sync_content.ps1
+
+      - name: Check for Out-of-Sync Files
+        shell: pwsh
+        run: |
+          $diff = git status --porcelain
+          if ($diff) {
+            Write-Host "::error::The following files are out of sync with the content/ directory. Please run .\scripts\sync_content.ps1 locally and commit the changes:"
+            Write-Host $diff
+            exit 1
+          } else {
+            Write-Host "All files are in sync!"
+          }
