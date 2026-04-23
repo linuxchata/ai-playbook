@@ -33,3 +33,6 @@ If you are contributing to this repository:
    ```powershell
    .\scripts\install-hooks.ps1
    ```
+
+# References
+- [Karpathy-Inspired Claude Code Guidelines](https://github.com/forrestchang/andrej-karpathy-skills)
