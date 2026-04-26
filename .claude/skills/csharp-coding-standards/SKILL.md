@@ -2,7 +2,7 @@
 name: csharp-coding-standards
 description: Defines the C# coding standards, patterns, and conventions to be applied consistently across all C# projects. Rules cover naming, structure, async patterns, null handling, dependency injection, logging, result patterns, and formatting. Apply these rules uniformly in all production code.
 metadata:
-  version: 1.0.0
+  version: 1.1.0
 ---
 
 # C# Coding Standards
@@ -128,7 +128,7 @@ Mark classes `sealed` by default unless inheritance is explicitly required. This
 
 ```csharp
 // ✅ Early return guard
-if (id == null || id.Length == 0)
+if (id is null || id.Length == 0)
 {
     return null;
 }

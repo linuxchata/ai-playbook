@@ -2,7 +2,7 @@
 name: csharp-testing-standards
 description: Defines the testing standards, patterns, and conventions for all C# unit and integration test projects. Rules cover test framework usage, naming, structure, mocking, assertions, and parameterization. Apply these rules uniformly across all test projects.
 metadata:
-  version: 1.0.0
+  version: 1.1.0
 ---
 
 # C# Testing Standards
@@ -73,7 +73,7 @@ public void Setup()
 {
     _orderRepositoryMock = new Mock<IOrderRepository>();
     _orderRepositoryMock
-        .Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), CancellationToken.None))
+        .Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
         .ReturnsAsync((Order?)null);
 
     _sut = new OrderService(
@@ -133,11 +133,11 @@ public async Task GetByIdAsync_WhenOrderExists_ThenReturnsOrder()
     var orderId = Guid.NewGuid();
     var order = new Order { Id = orderId, CustomerName = "Alice" };
     _orderRepositoryMock
-        .Setup(r => r.GetByIdAsync(orderId, CancellationToken.None))
+        .Setup(r => r.GetByIdAsync(orderId, It.IsAny<CancellationToken>()))
         .ReturnsAsync(order);
 
     // Act
-    var result = await _sut.GetByIdAsync(orderId, CancellationToken.None);
+    var result = await _sut.GetByIdAsync(orderId, It.IsAny<CancellationToken>());
 
     // Assert
     Assert.That(result, Is.Not.Null);
@@ -173,7 +173,7 @@ Use `Assert.ThrowsAsync<T>` for async methods that are expected to throw:
 
 ```csharp
 Assert.ThrowsAsync<ArgumentNullException>(
-    () => _sut.CreateAsync(null!, CancellationToken.None));
+    () => _sut.CreateAsync(null!, It.IsAny<CancellationToken>()));
 ```
 
 ### 5.3 Mock Verification
@@ -183,12 +183,12 @@ Use `.Verify()` only when asserting that a side-effecting call was (or was not) 
 ```csharp
 // ✅ Correct – asserting a save was triggered exactly once
 _orderRepositoryMock.Verify(
-    r => r.SaveAsync(It.IsAny<Order>(), CancellationToken.None),
+    r => r.SaveAsync(It.IsAny<Order>(), It.IsAny<CancellationToken>()),
     Times.Once);
 
 // ✅ Correct – asserting a call was never made
 _orderRepositoryMock.Verify(
-    r => r.DeleteAsync(It.IsAny<Guid>(), CancellationToken.None),
+    r => r.DeleteAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()),
     Times.Never);
 ```
 
@@ -208,7 +208,7 @@ public async Task CreateAsync_WhenCustomerNameIsEmpty_ThenReturnsFailure(string 
     var request = new CreateOrderRequest { CustomerName = customerName };
 
     // Act
-    var result = await _sut.CreateAsync(request, CancellationToken.None);
+    var result = await _sut.CreateAsync(request, It.IsAny<CancellationToken>());
 
     // Assert
     Assert.That(result.IsValid, Is.False);
@@ -248,12 +248,12 @@ Configure broad default behaviours in `[SetUp]` using `It.IsAny<T>()`. Narrow do
 ```csharp
 // SetUp – broad default
 _repositoryMock
-    .Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), CancellationToken.None))
+    .Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
     .ReturnsAsync((Order?)null);
 
 // Individual test – specific input
 _repositoryMock
-    .Setup(r => r.GetByIdAsync(specificId, CancellationToken.None))
+    .Setup(r => r.GetByIdAsync(specificId, It.IsAny<CancellationToken>()))
     .ReturnsAsync(specificOrder);
 ```
 

@@ -126,7 +126,7 @@ Mark classes `sealed` by default unless inheritance is explicitly required. This
 
 ```csharp
 // ✅ Early return guard
-if (id == null || id.Length == 0)
+if (id is null || id.Length == 0)
 {
     return null;
 }
